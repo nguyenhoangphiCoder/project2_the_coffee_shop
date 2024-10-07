@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DatabaseConfig } from './ormconfig';
+import { DatabaseConfig } from '../ormconfig';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 @Module({

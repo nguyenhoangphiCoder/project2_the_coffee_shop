@@ -8,10 +8,17 @@ export const DatabaseConfig: DataSourceOptions = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  ssl: {
+    rejectUnauthorized: false, // disable rejection of unauthorized certificates, optional
+  },
 };
 
 const AppDataSource = new DataSource({
   ...DatabaseConfig,
+  migrations:
+    process.env.NODE_ENV === 'production'
+      ? ['./dist/src/migrations/*.js'] // Use JS files in production
+      : ['./src/migrations/*.ts'],
 });
 
 export default AppDataSource;
