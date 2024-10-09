@@ -3,7 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { passwordResetTokens } from './passwordResetTokens.entity';
+import { addresses } from './address.entity';
 @Entity('user')
 export class User {
   @PrimaryGeneratedColumn() //tụe dộng tăng khoÁ chính
@@ -28,4 +31,11 @@ export class User {
   role: 'customer' | 'employee' | 'admin' | 'franchise_owner';
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   create_at: Date;
+  @OneToMany(
+    () => passwordResetTokens,
+    (passwordResetTokens) => passwordResetTokens.user,
+  )
+  passwordResetTokens: passwordResetTokens[];
+  @OneToMany(() => addresses, (address) => address.user)
+  addresses: addresses[];
 }
