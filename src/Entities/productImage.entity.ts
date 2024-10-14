@@ -15,8 +15,8 @@ export class ProductImages {
   id: number;
   @Column({ type: 'varchar', length: 255 })
   image_url: string;
-  @ManyToOne(() => Product, (product) => product.images)
-  product: Product;
+  // @ManyToOne(() => Product, (product) => product.images)
+  // product: Product;
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })

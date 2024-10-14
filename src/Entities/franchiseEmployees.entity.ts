@@ -12,11 +12,11 @@ import { User } from './user.entity';
 export class Franchise_employees {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => Franchises, (franchise) => franchise.franchise_employees, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'franchise_id' })
-  franchise: Franchises;
+  // @ManyToOne(() => Franchises, (franchise) => franchise.franchise_employees, {
+  //   onDelete: 'CASCADE',
+  // })
+  // @JoinColumn({ name: 'franchise_id' })
+  // franchise: Franchises;
   @ManyToOne(() => User, (user) => user.franchises_employees, {
     onDelete: 'CASCADE',
   })

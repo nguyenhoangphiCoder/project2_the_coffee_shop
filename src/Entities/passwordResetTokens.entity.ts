@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 @Entity('password_reset_tokens')
 export class passwordResetTokens {
@@ -7,7 +13,7 @@ export class passwordResetTokens {
   @ManyToOne(() => User, (user) => user.passwordResetTokens, {
     onDelete: 'CASCADE',
   })
-  @Column({ name: 'user_id' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
   @Column({ type: 'varchar', length: 255 })
   token: string;

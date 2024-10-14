@@ -19,6 +19,8 @@ export class Promotion {
   @Column({ type: 'text', nullable: true })
   description: string;
   @Column({ type: 'varchar', length: 50 })
+  discount_type: string;
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   discount_value: number;
   @Column({ type: 'date' })
   start_date: Date;

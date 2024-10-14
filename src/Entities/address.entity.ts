@@ -12,6 +12,7 @@ import { User } from './user.entity';
 export class addresses {
   @PrimaryGeneratedColumn()
   address_id: number;
+
   @ManyToOne(() => User, (user) => user.addresses, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;

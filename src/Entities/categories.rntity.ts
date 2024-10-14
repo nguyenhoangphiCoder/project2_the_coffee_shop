@@ -18,9 +18,9 @@ export class Categories {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-  @OneToMany(
-    () => productCategories,
-    (productcategories) => productcategories.category,
-  )
-  productcategories: productCategories[];
+  // @OneToMany(
+  //   () => productCategories,
+  //   (productcategories) => productcategories.category,
+  // )
+  // productcategories: productCategories[];
 }

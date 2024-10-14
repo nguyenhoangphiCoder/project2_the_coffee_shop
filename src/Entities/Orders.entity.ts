@@ -40,6 +40,6 @@ export class Orders {
     default: 'pending',
   })
   status: string;
-  @OneToMany(() => OrderItems, (OrderItems) => OrderItems.order)
-  orderItems: OrderItems[];
+  // @OneToMany(() => OrderItems, (OrderItems) => OrderItems.order)
+  // orderItems: OrderItems[];
 }

@@ -5,6 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfig } from '../ormconfig';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { UserModule } from './Database/Users/user.module';
+import { PasswordResetTokenModule } from './Database/passwordResetTokens/passwordResetToken.module';
+import { AddressModule } from './Database/address/address.module';
+import { PromotionModule } from './Database/Promotion/promotion.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -15,6 +19,10 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'public'),
     }),
+    UserModule,
+    PasswordResetTokenModule,
+    AddressModule,
+    PromotionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -19,6 +19,6 @@ export class Carts {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-  @OneToMany(() => CartItems, (cartItem) => cartItem.cart)
-  cartItem: CartItems[];
+  // @OneToMany(() => CartItems, (cartItem) => cartItem.cart)
+  // cartItem: CartItems[];
 }

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -15,10 +16,11 @@ import { OrderItemToppings } from './orderItemToppinds.entity';
 export class OrderItems {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => Orders, (order) => order.orderItems)
-  order: Orders;
-  @ManyToOne(() => Product, (product) => product.orderItems)
-  product: Product;
+  // @ManyToOne(() => Orders, (order) => order.orderItems)
+  // order: Orders;
+  // @ManyToOne(() => Product, (product) => product.orderItems)
+  // @JoinColumn({ name: 'product_id' })
+  // product: Product;
   @Column({ type: 'enum', enum: ['S', 'M', 'L'] })
   size: 'S' | 'M' | 'L';
   @Column({ type: 'int' })
@@ -29,9 +31,9 @@ export class OrderItems {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-  @OneToMany(
-    () => OrderItemToppings,
-    (orderItemTopping) => orderItemTopping.orderItems,
-  )
+  // @OneToMany(
+  //   () => OrderItemToppings,
+  //   (orderItemTopping) => orderItemTopping.orderItems,
+  // )
   orderItemToppings: OrderItemToppings[];
 }

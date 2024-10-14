@@ -29,13 +29,13 @@ export class Franchises {
   phone_number: string;
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
-  @OneToMany(
-    () => Franchise_employees,
-    (franchise_employees) => franchise_employees.franchise,
-  )
-  franchise_employees: Franchise_employees[];
-  @OneToMany(() => Product, (products) => products.franchises)
-  products: Product[];
-  @OneToMany(() => Orders, (order) => order.franchise)
-  order: Orders[];
+  // @OneToMany(
+  //   () => Franchise_employees,
+  //   (franchise_employees) => franchise_employees.franchise,
+  // )
+  // franchise_employees: Franchise_employees[];
+  // @OneToMany(() => Product, (products) => products.franchises)
+  // // products: Product[];
+  // @OneToMany(() => Orders, (order) => order.franchise)
+  // order: Orders[];
 }

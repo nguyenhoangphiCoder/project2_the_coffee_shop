@@ -29,6 +29,6 @@ export class PaymentMethod {
   expiry_date: string;
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
-  @OneToMany(() => Orders, (Orders) => Orders.payment_method)
-  Orders: Orders[];
+  // @OneToMany(() => Orders, (Orders) => Orders.payment_method)
+  // Orders: Orders[];
 }

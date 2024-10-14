@@ -29,30 +29,30 @@ export class Product {
   quatity: number;
   @Column({ type: 'int', default: 0 })
   quantity_sold: number;
-  @ManyToOne(() => Franchises, (franchises) => franchises.products, {
-    onDelete: 'CASCADE',
-  })
+  // @ManyToOne(() => Franchises, (franchises) => franchises.products, {
+  //   onDelete: 'CASCADE',
+  // })
   franchises: Franchises;
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-  @OneToMany(() => ProductSize, (productsize) => productsize.products)
-  size: ProductSize[];
-  @OneToMany(
-    () => ProductPromotions,
-    (productPromotions) => productPromotions.products,
-  )
-  promotions: ProductPromotions[];
-  @OneToMany(
-    () => productCategories,
-    (productcategories) => productcategories.product,
-  )
-  productcategories: productCategories[];
-  @OneToMany(() => ProductImages, (productiamges) => productiamges.product)
-  images: ProductImages[];
-  @OneToMany(() => OrderItems, (OrderItems) => OrderItems.product)
-  orderItems: OrderItems[];
-  @OneToMany(() => CartItems, (cartItem) => cartItem.product)
-  cartItem: CartItems[];
+  // @OneToMany(() => ProductSize, (productsize) => productsize.products)
+  // size: ProductSize[];
+  // @OneToMany(
+  //   () => ProductPromotions,
+  //   (productPromotions) => productPromotions.products,
+  // )
+  // promotions: ProductPromotions[];
+  // @OneToMany(
+  //   () => productCategories,
+  //   (productcategories) => productcategories.product,
+  // )
+  // productcategories: productCategories[];
+  // @OneToMany(() => ProductImages, (productiamges) => productiamges.product)
+  // images: ProductImages[];
+  // @OneToMany(() => OrderItems, (OrderItems) => OrderItems.product)
+  // orderItems: OrderItems[];
+  // @OneToMany(() => CartItems, (cartItem) => cartItem.product)
+  // cartItem: CartItems[];
 }

@@ -20,9 +20,9 @@ export class Toppings {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-  @OneToMany(
-    () => OrderItemToppings,
-    (OrderItemToppings) => OrderItemToppings.toppings,
-  )
-  orderItemTopping: OrderItemToppings[];
+  // @OneToMany(
+  //   () => OrderItemToppings,
+  //   (OrderItemToppings) => OrderItemToppings.toppings,
+  // )
+  // orderItemTopping: OrderItemToppings[];
 }

@@ -13,10 +13,10 @@ import { Product } from './Product.entity';
 export class ProductSize {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => Product, (products) => products.size, {
-    onDelete: 'CASCADE',
-  })
-  products: Product;
+  // @ManyToOne(() => Product, (products) => products.size, {
+  //   onDelete: 'CASCADE',
+  // })
+  // products: Product;
   @Column({ type: 'enum', enum: ['M', 'L', 'Xl'] })
   size: 'M' | 'L' | 'XL';
   @Column({ type: 'decimal' })
