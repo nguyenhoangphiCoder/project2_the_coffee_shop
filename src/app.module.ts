@@ -9,6 +9,9 @@ import { UserModule } from './Database/Users/user.module';
 import { PasswordResetTokenModule } from './Database/passwordResetTokens/passwordResetToken.module';
 import { AddressModule } from './Database/address/address.module';
 import { PromotionModule } from './Database/Promotion/promotion.module';
+import { FranchiseModule } from './Database/franchises/franchise.module';
+import { FranchiseEmployeeModule } from './Database/franchiseEmployee/franchiseEmployee.module';
+import { CategoryModule } from './Database/categories/category.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -23,6 +26,9 @@ import { PromotionModule } from './Database/Promotion/promotion.module';
     PasswordResetTokenModule,
     AddressModule,
     PromotionModule,
+    FranchiseModule,
+    FranchiseEmployeeModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

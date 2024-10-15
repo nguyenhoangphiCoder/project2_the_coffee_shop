@@ -6,8 +6,6 @@ import {
   CreatePromotionDTO,
   UpdatePromotionDTO,
 } from '../DTO/createPromotion.dto';
-import { promises } from 'dns';
-
 export class PromotionService {
   constructor(
     @InjectRepository(Promotion)
