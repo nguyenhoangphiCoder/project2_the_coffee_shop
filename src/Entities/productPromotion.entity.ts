@@ -16,10 +16,10 @@ export class ProductPromotions {
     onDelete: 'CASCADE',
   })
   promotions: Promotion;
-  // @ManyToOne(() => Product, (products) => products.promotions, {
-  //   onDelete: 'CASCADE',
-  // })
-  // products: Product;
+  @ManyToOne(() => Product, (products) => products.promotions, {
+    onDelete: 'CASCADE',
+  })
+  products: Product;
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })

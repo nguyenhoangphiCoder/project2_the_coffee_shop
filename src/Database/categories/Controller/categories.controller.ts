@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from '../Service/Categories.service';
 import { CreateCategoryDTO } from '../DTO/categories.dto';
-import { Categories } from 'src/Entities/categories.rntity';
+import { Categories } from 'src/Entities/categories.entity';
 import { updateUserDTO } from 'src/Database/Users/DTO/updateUser.dto';
 
 @Controller('categories')

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -26,33 +27,35 @@ export class Product {
   @Column({ type: 'text', nullable: true })
   description: string;
   @Column({ type: 'int', nullable: true })
-  quatity: number;
+  quantity: number;
   @Column({ type: 'int', default: 0 })
   quantity_sold: number;
-  // @ManyToOne(() => Franchises, (franchises) => franchises.products, {
-  //   onDelete: 'CASCADE',
-  // })
+  @ManyToOne(() => Franchises, (franchises) => franchises.products, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  @JoinColumn({ name: 'franchise_id' })
   franchises: Franchises;
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-  // @OneToMany(() => ProductSize, (productsize) => productsize.products)
-  // size: ProductSize[];
-  // @OneToMany(
-  //   () => ProductPromotions,
-  //   (productPromotions) => productPromotions.products,
-  // )
-  // promotions: ProductPromotions[];
-  // @OneToMany(
-  //   () => productCategories,
-  //   (productcategories) => productcategories.product,
-  // )
-  // productcategories: productCategories[];
-  // @OneToMany(() => ProductImages, (productiamges) => productiamges.product)
-  // images: ProductImages[];
-  // @OneToMany(() => OrderItems, (OrderItems) => OrderItems.product)
-  // orderItems: OrderItems[];
-  // @OneToMany(() => CartItems, (cartItem) => cartItem.product)
-  // cartItem: CartItems[];
+  @OneToMany(() => ProductSize, (productSize) => productSize.products)
+  size: ProductSize[];
+  @OneToMany(
+    () => ProductPromotions,
+    (productPromotions) => productPromotions.products,
+  )
+  promotions: ProductPromotions[];
+  @OneToMany(
+    () => productCategories,
+    (productcategories) => productcategories.product,
+  )
+  productcategories: productCategories[];
+  @OneToMany(() => ProductImages, (productiamges) => productiamges.product)
+  images: ProductImages[];
+  @OneToMany(() => OrderItems, (OrderItems) => OrderItems.product)
+  orderItems: OrderItems[];
+  @OneToMany(() => CartItems, (cartItem) => cartItem.product)
+  cartItem: CartItems[];
 }

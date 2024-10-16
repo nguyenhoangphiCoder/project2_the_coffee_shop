@@ -13,10 +13,10 @@ import { Product } from './Product.entity';
 export class CartItems {
   @PrimaryGeneratedColumn()
   id: number;
-  // @ManyToOne(() => Carts, (cart) => cart.cartItem)
-  // cart: Carts;
-  // @ManyToOne(() => Product, (product) => product.cartItem)
-  // product: Product;
+  @ManyToOne(() => Carts, (cart) => cart.cartItem)
+  cart: Carts;
+  @ManyToOne(() => Product, (product) => product.cartItem)
+  product: Product;
   @Column({ type: 'int' })
   quantity: number;
   @CreateDateColumn({ type: 'timestamp' })

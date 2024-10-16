@@ -16,9 +16,9 @@ export class OrderItemToppings {
   //   onDelete: 'CASCADE',
   // })
   // orderItems: OrderItems;
-  // @ManyToOne(() => Toppings, (toppings) => toppings.orderItemTopping, {
-  //   onDelete: 'CASCADE',
-  // })
+  @ManyToOne(() => Toppings, (toppings) => toppings.orderItemTopping, {
+    onDelete: 'CASCADE',
+  })
   toppings: Toppings[];
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;

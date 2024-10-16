@@ -16,11 +16,11 @@ import { OrderItemToppings } from './orderItemToppinds.entity';
 export class OrderItems {
   @PrimaryGeneratedColumn()
   id: number;
-  // @ManyToOne(() => Orders, (order) => order.orderItems)
-  // order: Orders;
-  // @ManyToOne(() => Product, (product) => product.orderItems)
-  // @JoinColumn({ name: 'product_id' })
-  // product: Product;
+  @ManyToOne(() => Orders, (order) => order.orderItems)
+  order: Orders;
+  @ManyToOne(() => Product, (product) => product.orderItems)
+  @JoinColumn({ name: 'product_id' })
+  product: Product;
   @Column({ type: 'enum', enum: ['S', 'M', 'L'] })
   size: 'S' | 'M' | 'L';
   @Column({ type: 'int' })
@@ -35,5 +35,5 @@ export class OrderItems {
   //   () => OrderItemToppings,
   //   (orderItemTopping) => orderItemTopping.orderItems,
   // )
-  orderItemToppings: OrderItemToppings[];
+  // orderItemToppings: OrderItemToppings[];
 }
