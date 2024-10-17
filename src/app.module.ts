@@ -14,6 +14,8 @@ import { FranchiseEmployeeModule } from './Database/franchiseEmployee/franchiseE
 import { CategoryModule } from './Database/categories/category.module';
 import { productModule } from './Database/Products/Product.module';
 import { ProductSizeMOdule } from './Database/ProductSize/ProductSize.module';
+import { ToppingModule } from './Database/Topping/Topping.module';
+import { ProductPromotionModule } from './Database/ProductPromotions/productpromotion.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -33,6 +35,8 @@ import { ProductSizeMOdule } from './Database/ProductSize/ProductSize.module';
     CategoryModule,
     productModule,
     ProductSizeMOdule,
+    ToppingModule,
+    ProductPromotionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

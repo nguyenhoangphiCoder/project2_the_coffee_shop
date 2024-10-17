@@ -5,12 +5,15 @@ import { Repository } from 'typeorm';
 import { createUserDTO } from '../DTO/createdUser.dto';
 import { NotFoundException } from '@nestjs/common';
 import { updateUserDTO } from '../DTO/updateUser.dto';
+import { Franchises } from 'src/Entities/franchises.entity';
 
 @Injectable()
 export class userService {
   constructor(
     @InjectRepository(User) // Inject repository của User entity để thao tác với cơ sở dữ liệu
     private userRepository: Repository<User>,
+    @InjectRepository(Franchises)
+    private FranchiseRepository: Repository<Franchises>,
   ) {}
   // tao 1 nguoi dung moi
 
@@ -45,7 +48,12 @@ export class userService {
 
   //xoa nguoi dung
   async remove(id: number): Promise<void> {
-    const user = await this.findOne(id); // timf nguoi dung trc khi xoa
-    await this.userRepository.remove(user); //xoa nguoi dung khoi csdl
+    const user = await this.findOne(id);
+
+    // Xóa các bản ghi franchise có owner là người dùng này
+    await this.FranchiseRepository.delete({ owner: user });
+
+    // Sau đó, xóa người dùng
+    await this.userRepository.remove(user);
   }
 }

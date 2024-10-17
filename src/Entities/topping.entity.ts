@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { OrderItemToppings } from './orderItemToppinds.entity';
+import { OrderItemToppings } from './orderItemToppings.entity';
 
 @Entity('toppings')
 export class Toppings {
