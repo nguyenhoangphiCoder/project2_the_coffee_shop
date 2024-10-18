@@ -16,6 +16,11 @@ import { productModule } from './Database/Products/Product.module';
 import { ProductSizeMOdule } from './Database/ProductSize/ProductSize.module';
 import { ToppingModule } from './Database/Topping/Topping.module';
 import { ProductPromotionModule } from './Database/ProductPromotions/productpromotion.module';
+import { productCategoriesModule } from './Database/ProductCategories/ProductCategories.module';
+import { ProductImagesModule } from './Database/productImages/productImage.module';
+import { PaymentMethodsModule } from './Database/paymentMethod/paymentMethod.module';
+import { OrderModule } from './Database/Orders/Order.module';
+import { OrderItemsModule } from './Database/OrderItems/OrderItem.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -37,6 +42,11 @@ import { ProductPromotionModule } from './Database/ProductPromotions/productprom
     ProductSizeMOdule,
     ToppingModule,
     ProductPromotionModule,
+    productCategoriesModule,
+    ProductImagesModule,
+    PaymentMethodsModule,
+    OrderModule,
+    OrderItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

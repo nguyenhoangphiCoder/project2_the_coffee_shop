@@ -28,6 +28,6 @@ import { OrderItems } from 'src/Entities/orderItems.entity';
   ], //connect entity vs type orm
   controllers: [userControllers], //dk controller
   providers: [userService], //dk service
-  exports: [userService],
+  exports: [userService, TypeOrmModule],
 })
 export class UserModule {}

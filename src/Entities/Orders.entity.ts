@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -17,10 +18,13 @@ export class Orders {
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => User, (user) => user.orders)
+  @JoinColumn({ name: 'user_id' })
   user: User;
   @ManyToOne(() => PaymentMethod)
+  @JoinColumn({ name: 'payment_method_id' })
   payment_method: PaymentMethod;
   @ManyToOne(() => User) // Managed by another user (employee)
+  @JoinColumn({ name: 'managed_by' })
   managed_by: User;
   @Column({ type: 'varchar', length: 255 })
   buyer_name: string;
@@ -29,6 +33,7 @@ export class Orders {
   @Column({ type: 'varchar', length: 100, nullable: true })
   buyer_email: string;
   @ManyToOne(() => Franchises)
+  @JoinColumn({ name: 'franchise_id' })
   franchise: Franchises;
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;

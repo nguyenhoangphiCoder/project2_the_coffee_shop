@@ -62,8 +62,8 @@ export class User {
   )
   franchises_employees: Franchise_employees[];
 
-  @OneToMany(() => PaymentMethod, (paymentmethod) => paymentmethod.user)
-  paymentmethods: PaymentMethod;
+  @OneToMany(() => PaymentMethod, (paymentMethod) => paymentMethod.user)
+  paymentMethods: PaymentMethod;
 
   @OneToMany(() => Orders, (orders) => orders.user)
   orders: Orders[];

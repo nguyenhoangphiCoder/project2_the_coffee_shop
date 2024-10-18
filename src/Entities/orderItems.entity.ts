@@ -17,6 +17,7 @@ export class OrderItems {
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => Orders, (order) => order.orderItems)
+  @JoinColumn({ name: 'order_id' })
   order: Orders;
   @ManyToOne(() => Product, (product) => product.orderItems)
   @JoinColumn({ name: 'product_id' })
@@ -31,9 +32,9 @@ export class OrderItems {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-  // @OneToMany(
-  //   () => OrderItemToppings,
-  //   (orderItemTopping) => orderItemTopping.orderItems,
-  // )
-  // orderItemToppings: OrderItemToppings[];
+  @OneToMany(
+    () => OrderItemToppings,
+    (orderItemTopping) => orderItemTopping.orderItems,
+  )
+  orderItemToppings: OrderItemToppings[];
 }

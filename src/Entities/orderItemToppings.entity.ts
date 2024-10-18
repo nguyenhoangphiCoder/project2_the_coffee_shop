@@ -12,10 +12,10 @@ import { Toppings } from './topping.entity';
 export class OrderItemToppings {
   @PrimaryGeneratedColumn()
   id: number;
-  // @ManyToOne(() => OrderItems, (OrderItems) => OrderItems.orderItemToppings, {
-  //   onDelete: 'CASCADE',
-  // })
-  // orderItems: OrderItems;
+  @ManyToOne(() => OrderItems, (OrderItems) => OrderItems.orderItemToppings, {
+    onDelete: 'CASCADE',
+  })
+  orderItems: OrderItems;
   @ManyToOne(() => Toppings, (toppings) => toppings.orderItemTopping, {
     onDelete: 'CASCADE',
   })

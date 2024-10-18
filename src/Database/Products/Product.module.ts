@@ -28,6 +28,6 @@ import { ProductsService } from './Service/Products.service';
   ],
   controllers: [ProductController],
   providers: [ProductsService],
-  exports: [ProductsService],
+  exports: [ProductsService, TypeOrmModule],
 })
 export class productModule {}
