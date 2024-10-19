@@ -9,6 +9,6 @@ import { OrderItemToppings } from 'src/Entities/orderItemToppings.entity';
   imports: [TypeOrmModule.forFeature([Toppings, OrderItemToppings])],
   controllers: [ToppingController],
   providers: [ToppingService],
-  exports: [ToppingService],
+  exports: [ToppingService, TypeOrmModule],
 })
 export class ToppingModule {}

@@ -21,6 +21,7 @@ import { ProductImagesModule } from './Database/productImages/productImage.modul
 import { PaymentMethodsModule } from './Database/paymentMethod/paymentMethod.module';
 import { OrderModule } from './Database/Orders/Order.module';
 import { OrderItemsModule } from './Database/OrderItems/OrderItem.module';
+import { OrderItemToppingModule } from './Database/OrderTopping/OrderTopping.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -47,6 +48,7 @@ import { OrderItemsModule } from './Database/OrderItems/OrderItem.module';
     PaymentMethodsModule,
     OrderModule,
     OrderItemsModule,
+    OrderItemToppingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
