@@ -11,6 +11,8 @@ import { Promotion } from 'src/Entities/promotions.entity';
 import { User } from 'src/Entities/user.entity';
 import { ProductController } from './Controller/product.controller';
 import { ProductsService } from './Service/Products.service';
+import { FranchiseModule } from '../franchises/franchise.module';
+import { UserModule } from '../Users/user.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { ProductsService } from './Service/Products.service';
       Promotion,
       Franchises,
     ]),
+    FranchiseModule,
+    UserModule,
   ],
   controllers: [ProductController],
   providers: [ProductsService],

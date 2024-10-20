@@ -30,8 +30,17 @@ export class ProductsService {
 
   // tao 1 sp moi
   async create(CreateProductsDTO: CreateProductsDTO): Promise<Product> {
-    const product = this.ProductRepository.create(CreateProductsDTO);
-    return await this.ProductRepository.save(product);
+    const franchise = await this.FranchiseRepository.findOne({
+      where: { id: CreateProductsDTO.franchise_id },
+    });
+    if (!franchise) {
+      throw new NotFoundException('Franchise not found');
+    }
+    const product = this.ProductRepository.create({
+      ...CreateProductsDTO, // Sử dụng DTO để khởi tạo sản phẩm
+      franchises: franchise, // Gán franchise
+    });
+    return this.ProductRepository.save(product);
   }
 
   // cap nhat thong tin sp

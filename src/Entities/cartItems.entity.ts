@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,8 +15,10 @@ export class CartItems {
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => Carts, (cart) => cart.cartItem)
+  @JoinColumn({ name: 'cart_id' })
   cart: Carts;
   @ManyToOne(() => Product, (product) => product.cartItem)
+  @JoinColumn({ name: 'product_id' })
   product: Product;
   @Column({ type: 'int' })
   quantity: number;

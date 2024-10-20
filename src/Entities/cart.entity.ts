@@ -1,6 +1,7 @@
 import {
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -14,6 +15,7 @@ export class Carts {
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => User, (user) => user.cart)
+  @JoinColumn({ name: 'user_id' })
   user: User;
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
