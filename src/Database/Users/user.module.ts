@@ -11,6 +11,7 @@ import { PaymentMethod } from 'src/Entities/paymentMethod.entity';
 import { Orders } from 'src/Entities/Orders.entity';
 import { Carts } from 'src/Entities/cart.entity';
 import { OrderItems } from 'src/Entities/orderItems.entity';
+import { AuthService } from './Service/Auth.service';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { OrderItems } from 'src/Entities/orderItems.entity';
     ]),
   ], //connect entity vs type orm
   controllers: [userControllers], //dk controller
-  providers: [userService], //dk service
+  providers: [userService, AuthService], //dk service
   exports: [userService, TypeOrmModule],
 })
 export class UserModule {}

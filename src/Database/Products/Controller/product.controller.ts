@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from '../Service/Products.service';
 import { get } from 'http';
@@ -41,5 +42,10 @@ export class ProductController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ProductsService.remove(+id);
+  }
+  @Get('search')
+  async searchProducts(@Param('name') name: string) {
+    console.log('Query parameter name:', name);
+    return this.ProductsService.findByName(+name);
   }
 }

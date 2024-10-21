@@ -1,13 +1,14 @@
 import {
   IsEmpty,
   IsInt,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
 
 export class CreateProductsDTO {
-  @IsEmpty()
+  @IsNotEmpty()
   id: number;
 
   @IsString()
@@ -37,7 +38,7 @@ export class CreateProductsDTO {
   updated_at: Date;
 }
 export class UpdateProductsDTO {
-  @IsEmpty()
+  @IsNotEmpty()
   id?: number;
 
   @IsString()

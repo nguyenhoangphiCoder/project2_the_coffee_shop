@@ -1,7 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from 'src/Entities/Product.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateProductsDTO, UpdateProductsDTO } from '../DTO/Products.dto';
 import { Franchises } from 'src/Entities/franchises.entity';
 
@@ -76,5 +80,16 @@ export class ProductsService {
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);
     await this.ProductRepository.remove(product);
+  }
+  //tim kiem sp theo ten
+  async findByName(name: number): Promise<Product[]> {
+    if (!name) {
+      throw new BadRequestException('Name query parameter is required');
+    }
+    console.log('Searching for products with name:', name);
+    return this.ProductRepository.find({
+      where: { name: Like(`%${name}%`) }, // Sử dụng Like để tìm kiếm
+      relations: ['categories'],
+    });
   }
 }
