@@ -7,6 +7,8 @@ import { User } from 'src/Entities/user.entity';
 import { OrderController } from './Controller/order.controller';
 import { OrderService } from './Service/Order.service';
 import { OrderItems } from 'src/Entities/orderItems.entity';
+import { CartItemModule } from '../CartItem/CartItem.module';
+import { CartItems } from 'src/Entities/cartItems.entity';
 
 @Module({
   imports: [
@@ -16,10 +18,12 @@ import { OrderItems } from 'src/Entities/orderItems.entity';
       PaymentMethod,
       Franchises,
       OrderItems,
+      CartItems,
     ]),
+    CartItemModule,
   ],
   providers: [OrderService],
   controllers: [OrderController],
-  exports: [OrderService],
+  exports: [OrderService, TypeOrmModule],
 })
 export class OrderModule {}

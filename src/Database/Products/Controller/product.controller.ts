@@ -10,7 +10,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { ProductsService } from '../Service/Products.service';
-import { get } from 'http';
 import { CreateProductsDTO, UpdateProductsDTO } from '../DTO/Products.dto';
 import { Product } from 'src/Entities/Product.entity';
 
@@ -19,17 +18,13 @@ export class ProductController {
   constructor(private readonly ProductsService: ProductsService) {}
 
   @Get()
-  findAll() {
-    return this.ProductsService.findAll();
+  findAll(@Query('name') name?: string) {
+    return this.ProductsService.findAll(name); // Tìm tất cả sản phẩm hoặc theo tên
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    const productId = parseInt(id, 10); // Chuyển đổi ID từ string sang number
-    if (isNaN(productId)) {
-      throw new BadRequestException('Invalid product ID');
-    }
-    return this.ProductsService.findOne(productId);
+  @Get(':name')
+  findOne(@Param('name') name: string) {
+    return this.ProductsService.findOneByName(name); // Tìm sản phẩm theo tên
   }
 
   @Post()
@@ -37,16 +32,21 @@ export class ProductController {
     return this.ProductsService.create(CreateProductsDTO);
   }
 
-  @Patch(':id')
+  @Patch(':name')
   update(
-    @Param('id') id: string,
+    @Param('name') name: string,
     @Body() UpdateProductsDTO: UpdateProductsDTO,
   ) {
-    return this.ProductsService.update(+id, UpdateProductsDTO);
+    return this.ProductsService.update(name, UpdateProductsDTO); // Cập nhật theo tên
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ProductsService.remove(+id);
+  @Delete(':name')
+  remove(@Param('name') name: string) {
+    return this.ProductsService.remove(name); // Xóa theo tên
+  }
+
+  @Get('search')
+  async searchProducts(@Query('name') name: string): Promise<Product[]> {
+    return this.ProductsService.findByName(name);
   }
 }

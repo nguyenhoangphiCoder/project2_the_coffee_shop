@@ -5,6 +5,7 @@ import {
   IsInt,
   IsOptional,
   IsPhoneNumber,
+  IsString,
 } from 'class-validator';
 
 export class CreateOrderDTO {
@@ -21,7 +22,7 @@ export class CreateOrderDTO {
   managed_by?: number;
 
   @IsOptional()
-  @IsInt()
+  @IsString()
   buyer_name?: string;
 
   @IsOptional()

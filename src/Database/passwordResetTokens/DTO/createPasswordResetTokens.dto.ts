@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString, IsDate } from 'class-validator';
 
 export class CreatePassWordResetTokensDTO {
@@ -9,5 +10,6 @@ export class CreatePassWordResetTokensDTO {
   token: string;
 
   @IsDate()
+  @Type(() => Date) // Chuyển đổi chuỗi ngày tháng thành Date
   expired_at: Date;
 }

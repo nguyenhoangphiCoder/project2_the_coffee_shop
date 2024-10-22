@@ -1,8 +1,9 @@
 import { PartialType } from '@nestjs/mapped-types';
+import { Type } from 'class-transformer';
 import { IsDate, IsEmpty, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePromotionDTO {
-  @IsEmpty()
+  @IsNotEmpty()
   @IsString()
   name: string;
 
@@ -20,10 +21,12 @@ export class CreatePromotionDTO {
 
   @IsNotEmpty()
   @IsDate()
+  @Type(() => Date)
   start_date: Date;
 
   @IsNotEmpty()
   @IsDate()
+  @Type(() => Date)
   end_date: Date;
 
   @IsNotEmpty()

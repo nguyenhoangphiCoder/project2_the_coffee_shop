@@ -34,19 +34,26 @@ export class ProductsService {
     private readonly OrderItemsRepository: Repository<OrderItems>,
     @InjectRepository(CartItems)
     private readonly CartItemsRepository: Repository<CartItems>,
-    private readonly dataSource: DataSource, // Thêm vào đây
+    private readonly dataSource: DataSource,
   ) {}
 
   // Liệt kê tất cả sản phẩm
-  async findAll(): Promise<Product[]> {
-    return await this.ProductRepository.find();
+  async findAll(name?: string): Promise<Product[]> {
+    const query = this.ProductRepository.createQueryBuilder('product');
+
+    // Nếu có tên, thêm điều kiện tìm kiếm
+    if (name) {
+      query.where('product.name LIKE :name', { name: `%${name}%` });
+    }
+
+    return await query.getMany();
   }
 
-  // Liệt kê sản phẩm theo id
-  async findOne(id: number): Promise<Product> {
-    const product = await this.ProductRepository.findOne({ where: { id } });
+  // Liệt kê sản phẩm theo tên
+  async findOneByName(name: string): Promise<Product> {
+    const product = await this.ProductRepository.findOne({ where: { name } });
     if (!product) {
-      throw new NotFoundException(`Not found product with id ${id}`);
+      throw new NotFoundException(`Not found product with name ${name}`);
     }
     return product;
   }
@@ -66,12 +73,12 @@ export class ProductsService {
     return this.ProductRepository.save(product);
   }
 
-  // Cập nhật thông tin sản phẩm
+  // Cập nhật thông tin sản phẩm theo tên
   async update(
-    id: number,
+    name: string,
     UpdateProductsDTO: UpdateProductsDTO,
   ): Promise<Product> {
-    const product = await this.findOne(id); // Kiểm tra sản phẩm có tồn tại
+    const product = await this.findOneByName(name); // Kiểm tra sản phẩm có tồn tại
 
     // Xử lý để ánh xạ đến entity Franchise
     if (UpdateProductsDTO.franchise_id) {
@@ -93,21 +100,18 @@ export class ProductsService {
     return await this.ProductRepository.save(product);
   }
 
-  // Xóa sản phẩm
-  async remove(id: number): Promise<void> {
-    // Tìm sản phẩm theo id
-    const product = await this.ProductRepository.findOne({ where: { id } });
-    if (!product) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
-    }
+  // Xóa sản phẩm theo tên
+  async remove(name: string): Promise<void> {
+    const product = await this.findOneByName(name); // Tìm sản phẩm theo tên
 
     // Xóa các bản ghi trong tất cả các bảng liên quan
-    await this.ProductCategoriesRepository.delete({ product }); // Sử dụng đúng thuộc tính `product`
+    await this.ProductCategoriesRepository.delete({ product });
     await this.ProductImagesRepository.delete({ product });
     await this.OrderItemsRepository.delete({ product });
     await this.CartItemsRepository.delete({ product });
     await this.ProductPromotionRepository.delete({ products: product });
     await this.ProductSizeRepository.delete({ products: product });
+
     // Cuối cùng, xóa sản phẩm
     await this.ProductRepository.remove(product);
   }

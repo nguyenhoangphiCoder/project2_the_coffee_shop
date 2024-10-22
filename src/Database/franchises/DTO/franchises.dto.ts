@@ -23,7 +23,7 @@ export class CreateFranchiseDTO {
   address: string;
 
   @IsOptional()
-  @IsPhoneNumber(null)
+  @IsString()
   phone_number?: string;
 }
 export class UpdateFranchiseDTO {
@@ -38,6 +38,6 @@ export class UpdateFranchiseDTO {
   address?: string;
 
   @IsOptional()
-  @IsPhoneNumber(null)
+  @IsString()
   phone_number?: string;
 }

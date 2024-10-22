@@ -13,6 +13,7 @@ import { Franchise_employees } from './franchiseEmployees.entity';
 import { PaymentMethod } from './paymentMethod.entity';
 import { Orders } from './Orders.entity';
 import { Carts } from './cart.entity';
+import { CartItems } from './cartItems.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn() //tụe dộng tăng khoÁ chính
@@ -73,4 +74,6 @@ export class User {
 
   @OneToMany(() => Carts, (cart) => cart.user)
   cart: Carts[];
+  @OneToMany(() => CartItems, (cartItem) => cartItem.user)
+  cartItem: CartItems[];
 }

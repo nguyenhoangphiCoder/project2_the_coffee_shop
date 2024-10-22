@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Carts } from './cart.entity';
 import { Product } from './Product.entity';
+import { User } from './user.entity';
 
 @Entity('cart_items')
 export class CartItems {
@@ -30,4 +31,6 @@ export class CartItems {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+  @ManyToOne(() => User, (user) => user.cartItem, { onDelete: 'CASCADE' })
+  user: User;
 }
