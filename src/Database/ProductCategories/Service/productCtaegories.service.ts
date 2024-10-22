@@ -1,7 +1,7 @@
 import { Delete, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductsDTO } from 'src/Database/Products/DTO/Products.dto';
-import { productCategories } from 'src/Entities/productcategories.emtity';
+import { ProductCategories } from 'src/Entities/productcategories.emtity';
 import { Repository } from 'typeorm';
 import {
   CreateProductCategoriesDTO,
@@ -14,8 +14,8 @@ import { mergeWith } from 'rxjs';
 @Injectable()
 export class productCategoryService {
   constructor(
-    @InjectRepository(productCategories)
-    private productCategoriesRepository: Repository<productCategories>,
+    @InjectRepository(ProductCategories)
+    private productCategoriesRepository: Repository<ProductCategories>,
     @InjectRepository(Categories)
     private categoryRepository: Repository<Categories>,
 
@@ -25,7 +25,7 @@ export class productCategoryService {
 
   async create(
     CreateProductCategoriesDTO: CreateProductCategoriesDTO,
-  ): Promise<productCategories> {
+  ): Promise<ProductCategories> {
     const productCategories = this.productCategoriesRepository.create({
       category: { id: CreateProductCategoriesDTO.category_id },
       product: { id: CreateProductCategoriesDTO.product_id },
@@ -33,11 +33,11 @@ export class productCategoryService {
     return this.productCategoriesRepository.save(productCategories);
   }
 
-  async FindAll(): Promise<productCategories[]> {
+  async FindAll(): Promise<ProductCategories[]> {
     return this.productCategoriesRepository.find();
   }
 
-  async FindOne(id: number): Promise<productCategories> {
+  async FindOne(id: number): Promise<ProductCategories> {
     return this.productCategoriesRepository.findOne({
       where: { id },
       relations: ['category', 'product'],
@@ -47,7 +47,7 @@ export class productCategoryService {
   async update(
     id: number,
     UpdateProductCategoriesDTO: UpdateProductCategoriesDTO,
-  ): Promise<productCategories> {
+  ): Promise<ProductCategories> {
     const productCategories = await this.FindOne(id);
     if (!productCategories) {
       throw new Error('not found');

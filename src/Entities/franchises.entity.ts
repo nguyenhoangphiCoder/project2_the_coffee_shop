@@ -36,12 +36,19 @@ export class Franchises {
   @OneToMany(
     () => Franchise_employees,
     (franchise_employees) => franchise_employees.franchise,
+    {
+      onDelete: 'CASCADE',
+    },
   )
   employees: Franchise_employees[];
 
-  @OneToMany(() => Product, (products) => products.franchises)
+  @OneToMany(() => Product, (products) => products.franchises, {
+    onDelete: 'CASCADE',
+  })
   products: Product[];
 
-  @OneToMany(() => Orders, (order) => order.franchise)
+  @OneToMany(() => Orders, (order) => order.franchise, {
+    onDelete: 'CASCADE',
+  })
   order: Orders[];
 }

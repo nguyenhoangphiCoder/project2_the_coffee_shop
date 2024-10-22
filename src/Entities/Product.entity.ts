@@ -11,7 +11,7 @@ import {
 import { Franchises } from './franchises.entity';
 import { ProductSize } from './productSize.entity';
 import { ProductPromotions } from './productPromotion.entity';
-import { productCategories } from './productcategories.emtity';
+import { ProductCategories } from './productcategories.emtity';
 import { ProductImages } from './productImage.entity';
 import { OrderItems } from './orderItems.entity';
 import { CartItems } from './cartItems.entity';
@@ -48,10 +48,11 @@ export class Product {
   )
   promotions: ProductPromotions[];
   @OneToMany(
-    () => productCategories,
-    (productcategories) => productcategories.product,
+    () => ProductCategories,
+    (ProductCategories) => ProductCategories.product,
+    { onDelete: 'CASCADE' },
   )
-  productcategories: productCategories[];
+  productcategories: ProductCategories[];
   @OneToMany(() => ProductImages, (productiamges) => productiamges.product)
   images: ProductImages[];
   @OneToMany(() => OrderItems, (OrderItems) => OrderItems.product)

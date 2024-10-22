@@ -8,9 +8,12 @@ import { ProductSizeService } from '../ProductSize/Service/ProductSize.service';
 import { productPromotionService } from './Service/productPromotion.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductPromotions, Product, User])],
+  imports: [
+    TypeOrmModule.forFeature([ProductPromotions, Product, User]),
+    ProductPromotionModule,
+  ],
   controllers: [ProductPromotionController],
   providers: [productPromotionService],
-  exports: [productPromotionService],
+  exports: [productPromotionService, TypeOrmModule],
 })
 export class ProductPromotionModule {}

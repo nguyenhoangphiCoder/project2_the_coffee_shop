@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { productCategories } from './productcategories.emtity';
+import { ProductCategories } from './productcategories.emtity';
 
 @Entity('categories')
 export class Categories {
@@ -19,8 +19,11 @@ export class Categories {
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
   @OneToMany(
-    () => productCategories,
-    (productcategories) => productcategories.category,
+    () => ProductCategories,
+    (ProductCategories) => ProductCategories.category,
+    {
+      onDelete: 'CASCADE',
+    },
   )
-  productcategories: productCategories[];
+  ProductCategories: ProductCategories[];
 }

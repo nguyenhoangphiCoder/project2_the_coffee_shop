@@ -13,6 +13,9 @@ import { ProductController } from './Controller/product.controller';
 import { ProductsService } from './Service/Products.service';
 import { FranchiseModule } from '../franchises/franchise.module';
 import { UserModule } from '../Users/user.module';
+import { productCategoriesModule } from '../ProductCategories/ProductCategories.module';
+import { CartItemModule } from '../CartItem/CartItem.module';
+import { ProductPromotionModule } from '../ProductPromotions/productpromotion.module';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { UserModule } from '../Users/user.module';
     ]),
     FranchiseModule,
     UserModule,
+    productCategoriesModule,
+    CartItemModule,
+    ProductPromotionModule,
   ],
   controllers: [ProductController],
   providers: [ProductsService],

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -11,6 +12,7 @@ import {
 import { ProductsService } from '../Service/Products.service';
 import { get } from 'http';
 import { CreateProductsDTO, UpdateProductsDTO } from '../DTO/Products.dto';
+import { Product } from 'src/Entities/Product.entity';
 
 @Controller('Products')
 export class ProductController {
@@ -23,7 +25,11 @@ export class ProductController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.ProductsService.findOne(+id);
+    const productId = parseInt(id, 10); // Chuyển đổi ID từ string sang number
+    if (isNaN(productId)) {
+      throw new BadRequestException('Invalid product ID');
+    }
+    return this.ProductsService.findOne(productId);
   }
 
   @Post()
@@ -42,10 +48,5 @@ export class ProductController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ProductsService.remove(+id);
-  }
-  @Get('search')
-  async searchProducts(@Param('name') name: string) {
-    console.log('Query parameter name:', name);
-    return this.ProductsService.findByName(+name);
   }
 }

@@ -17,9 +17,13 @@ export class CartItems {
   @ManyToOne(() => Carts, (cart) => cart.cartItem)
   @JoinColumn({ name: 'cart_id' })
   cart: Carts;
-  @ManyToOne(() => Product, (product) => product.cartItem)
+  @ManyToOne(() => Product, (product) => product.cartItem, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'product_id' })
   product: Product;
+  @Column({ type: 'int' })
+  product_id: number;
   @Column({ type: 'int' })
   quantity: number;
   @CreateDateColumn({ type: 'timestamp' })

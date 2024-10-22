@@ -1,5 +1,4 @@
 import {
-  IsEmpty,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -8,13 +7,16 @@ import {
 } from 'class-validator';
 
 export class CreateProductsDTO {
-  @IsNotEmpty()
-  id: number;
+  // id không cần trong yêu cầu tạo sản phẩm mới
+  @IsOptional() // Để nó không bắt buộc
+  id?: number;
 
   @IsString()
+  @IsNotEmpty() // Đảm bảo tên không rỗng
   name: string;
 
   @IsNumber()
+  @IsNotEmpty() // Đảm bảo giá không rỗng
   price: number;
 
   @IsOptional()
@@ -22,23 +24,26 @@ export class CreateProductsDTO {
   description?: string;
 
   @IsInt()
+  @IsNotEmpty() // Đảm bảo số lượng không rỗng
   quantity: number;
 
   @IsOptional()
   @IsInt()
-  quantity_sold: number;
+  quantity_sold?: number;
 
   @IsInt()
+  @IsNotEmpty() // Đảm bảo franchise_id không rỗng
   franchise_id: number;
 
-  @IsEmpty()
-  created_at: Date;
+  @IsOptional() // Không cần bắt buộc
+  created_at?: Date;
 
-  @IsEmpty()
-  updated_at: Date;
+  @IsOptional() // Không cần bắt buộc
+  updated_at?: Date;
 }
+
 export class UpdateProductsDTO {
-  @IsNotEmpty()
+  @IsOptional() // Để nó không bắt buộc
   id?: number;
 
   @IsString()
@@ -59,11 +64,12 @@ export class UpdateProductsDTO {
   quantity_sold?: number;
 
   @IsInt()
+  @IsOptional() // Không cần bắt buộc
   franchise_id?: number;
 
-  @IsEmpty()
+  @IsOptional() // Không cần bắt buộc
   created_at?: Date;
 
-  @IsEmpty()
+  @IsOptional() // Không cần bắt buộc
   updated_at?: Date;
 }

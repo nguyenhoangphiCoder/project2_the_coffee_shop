@@ -16,10 +16,14 @@ import { OrderItemToppings } from './orderItemToppings.entity';
 export class OrderItems {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => Orders, (order) => order.orderItems)
+  @ManyToOne(() => Orders, (order) => order.orderItems, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'order_id' })
   order: Orders;
-  @ManyToOne(() => Product, (product) => product.orderItems)
+  @ManyToOne(() => Product, (product) => product.orderItems, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'product_id' })
   product: Product;
   @Column({ type: 'enum', enum: ['S', 'M', 'L'] })
@@ -35,6 +39,11 @@ export class OrderItems {
   @OneToMany(
     () => OrderItemToppings,
     (orderItemTopping) => orderItemTopping.orderItems,
+    {
+      onDelete: 'CASCADE',
+    },
   )
   orderItemToppings: OrderItemToppings[];
+  @Column()
+  product_id: number;
 }

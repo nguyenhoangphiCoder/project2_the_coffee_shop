@@ -17,10 +17,14 @@ import { OrderItems } from './orderItems.entity';
 export class Orders {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => User, (user) => user.orders)
+  @ManyToOne(() => User, (user) => user.orders, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
-  @ManyToOne(() => PaymentMethod)
+  @ManyToOne(() => PaymentMethod, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'payment_method_id' })
   payment_method: PaymentMethod;
   @ManyToOne(() => User) // Managed by another user (employee)
@@ -32,7 +36,9 @@ export class Orders {
   buyer_phone: string;
   @Column({ type: 'varchar', length: 100, nullable: true })
   buyer_email: string;
-  @ManyToOne(() => Franchises)
+  @ManyToOne(() => Franchises, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'franchise_id' })
   franchise: Franchises;
   @CreateDateColumn({ type: 'timestamp' })
@@ -45,6 +51,8 @@ export class Orders {
     default: 'pending',
   })
   status: string;
-  @OneToMany(() => OrderItems, (OrderItems) => OrderItems.order)
+  @OneToMany(() => OrderItems, (OrderItems) => OrderItems.order, {
+    onDelete: 'CASCADE',
+  })
   orderItems: OrderItems[];
 }
