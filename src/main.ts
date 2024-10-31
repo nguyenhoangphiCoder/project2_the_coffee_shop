@@ -13,8 +13,8 @@ console.log(
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  // app.enableCors({ origin: '*' });
-  app.use(cors());
+  app.enableCors({ origin: '*' });
+
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.use(
     session({
