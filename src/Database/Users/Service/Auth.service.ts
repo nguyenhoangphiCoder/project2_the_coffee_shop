@@ -32,20 +32,20 @@ export class AuthService {
   async signIn(email: string, password: string) {
     const user = await this.userRepository.findOne({
       where: { email },
-      select: ['id', 'password'],
+      select: ['id', 'email', 'name', 'avatar_url', 'phone_number', 'password'],
+      relations: ['addresses'], // Thêm mối quan hệ với địa chỉ
     });
 
     if (!user) {
       throw new BadRequestException('Invalid email');
-    } else {
-      const storedPassword = user.password;
+    }
 
-      if (password === storedPassword) {
-        // So sánh mật khẩu trực tiếp
-        return user;
-      } else {
-        throw new BadRequestException('Invalid email');
-      }
+    const storedPassword = user.password;
+    if (password === storedPassword) {
+      const { password, ...userInfo } = user; // Tách mật khẩu ra
+      return { ...userInfo, addresses: user.addresses }; // Trả về thông tin người dùng cùng với địa chỉ
+    } else {
+      throw new BadRequestException('Invalid password');
     }
   }
 }

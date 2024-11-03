@@ -18,13 +18,13 @@ export class ProductController {
   constructor(private readonly ProductsService: ProductsService) {}
 
   @Get()
-  findAll(@Query('name') name?: string) {
-    return this.ProductsService.findAll(name); // Tìm tất cả sản phẩm hoặc theo tên
+  findAll() {
+    return this.ProductsService.findAll(); // Tìm tất cả sản phẩm hoặc theo tên
   }
 
-  @Get(':name')
-  findOne(@Param('name') name: string) {
-    return this.ProductsService.findOneByName(name); // Tìm sản phẩm theo tên
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.ProductsService.findOne(id); // Tìm sản phẩm theo id
   }
 
   @Post()
@@ -32,17 +32,17 @@ export class ProductController {
     return this.ProductsService.create(CreateProductsDTO);
   }
 
-  @Patch(':name')
+  @Patch(':id')
   update(
-    @Param('name') name: string,
+    @Param('id') id: string,
     @Body() UpdateProductsDTO: UpdateProductsDTO,
   ) {
-    return this.ProductsService.update(name, UpdateProductsDTO); // Cập nhật theo tên
+    return this.ProductsService.update(id, UpdateProductsDTO); // Cập nhật theo id
   }
 
-  @Delete(':name')
-  remove(@Param('name') name: string) {
-    return this.ProductsService.remove(name); // Xóa theo tên
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.ProductsService.remove(id); // Xóa theo id
   }
 
   @Get('search')

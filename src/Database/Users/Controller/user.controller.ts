@@ -45,13 +45,14 @@ export class userControllers {
       throw new Error('Session not found');
     }
     session.user_id = user.id;
-    return 'login successfully';
+    return { message: 'Login successfully', user };
   }
   @Post('sign-out')
   signOut(@Session() session: Record<string, any>) {
     delete session.userId;
     return 'Sign out successfully!';
   }
+
   @Post('forgot-password')
   async forgotPassword() {
     return 'return password via email';
