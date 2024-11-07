@@ -34,7 +34,9 @@ export class productCategoryService {
   }
 
   async FindAll(): Promise<ProductCategories[]> {
-    return this.productCategoriesRepository.find();
+    return this.productCategoriesRepository.find({
+      relations: ['product', 'category'],
+    });
   }
 
   async FindOne(id: number): Promise<ProductCategories> {
@@ -42,6 +44,24 @@ export class productCategoryService {
       where: { id },
       relations: ['category', 'product'],
     });
+  }
+  async FindOneBy(category_id: number): Promise<Product[]> {
+    // Kiểm tra xem danh mục có tồn tại không
+    const categoryExists = await this.categoryRepository.findOne({
+      where: { id: category_id },
+    });
+
+    if (!categoryExists) {
+      throw new Error('Category not found');
+    }
+
+    // Trả về các sản phẩm thuộc danh mục này
+    const productCategories = await this.productCategoriesRepository.find({
+      where: { category: { id: category_id } },
+      relations: ['product'], // Lấy thông tin sản phẩm qua quan hệ product
+    });
+
+    return productCategories.map((pc) => pc.product); // Trả về danh sách các sản phẩm
   }
 
   async update(

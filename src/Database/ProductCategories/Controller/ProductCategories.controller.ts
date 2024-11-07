@@ -15,12 +15,12 @@ import {
 import { get } from 'http';
 import { find } from 'rxjs';
 import { UpdateAddressDTO } from 'src/Database/address/DTO/address.dto';
-
 @Controller('product_categories')
 export class ProductCategoryController {
   constructor(
     private readonly productCategoryService: productCategoryService,
   ) {}
+
   @Post()
   create(@Body() CreateProductCategoriesDTO: CreateProductCategoriesDTO) {
     return this.productCategoryService.create(CreateProductCategoriesDTO);
@@ -35,6 +35,12 @@ export class ProductCategoryController {
   findOne(@Param('id') id: string) {
     return this.productCategoryService.FindOne(+id);
   }
+
+  @Get('category/:category_id')
+  findOneBy(@Param('category_id') category_id: string) {
+    return this.productCategoryService.FindOneBy(+category_id); // Lấy sản phẩm thuộc category_id
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -42,6 +48,7 @@ export class ProductCategoryController {
   ) {
     return this.productCategoryService.update(+id, UpdateProductCategoriesDTO);
   }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productCategoryService.remove(+id);
