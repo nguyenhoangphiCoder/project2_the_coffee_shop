@@ -15,7 +15,7 @@ export class CreateProductsDTO {
   @IsNotEmpty() // Đảm bảo tên không rỗng
   name: string;
 
-  @IsString()
+  @IsNumber()
   @IsNotEmpty() // Đảm bảo giá không rỗng
   price: number;
 
