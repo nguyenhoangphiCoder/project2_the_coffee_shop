@@ -31,6 +31,4 @@ export class CartItems {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
-  @ManyToOne(() => User, (user) => user.cartItem, { onDelete: 'CASCADE' })
-  user: User;
 }

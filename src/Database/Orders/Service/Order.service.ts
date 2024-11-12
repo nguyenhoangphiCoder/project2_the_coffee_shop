@@ -97,7 +97,7 @@ export class OrderService {
     franchise_id: number,
   ): Promise<Orders> {
     const cartItems = await this.cartItemsRepository.find({
-      where: { user: { id: user_id } },
+      where: { cart: { id: user_id } },
       relations: ['product'],
     });
 
@@ -136,7 +136,7 @@ export class OrderService {
     });
 
     await this.orderRepository.save(order);
-    await this.cartItemsRepository.delete({ user: { id: user_id } }); // Xóa các mặt hàng trong giỏ hàng
+    await this.cartItemsRepository.delete({ cart: { id: user_id } }); // Xóa các mặt hàng trong giỏ hàng
 
     return order;
   }

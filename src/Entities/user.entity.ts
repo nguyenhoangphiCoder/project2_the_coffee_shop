@@ -74,6 +74,4 @@ export class User {
 
   @OneToMany(() => Carts, (cart) => cart.user)
   cart: Carts[];
-  @OneToMany(() => CartItems, (cartItem) => cartItem.user)
-  cartItem: CartItems[];
 }
