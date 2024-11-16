@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CartService } from '../Service/Cart.service';
 import { CreateCartDTO, UpdateCartDTO } from '../DTO/Cart.dto';
@@ -37,5 +38,9 @@ export class CartController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.cartService.remove(+id);
+  }
+  @Get()
+  async findByUserId(@Query('user_id') user_id: string) {
+    return this.cartService.findByUserId(+user_id); // Giả sử userId là số
   }
 }

@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsInt, IsPositive } from 'class-validator';
+import { IsEnum, IsInt, IsNumber, IsPositive, IsString } from 'class-validator';
 
 export class CreateCartItemDto {
   @IsInt()
@@ -10,5 +10,9 @@ export class CreateCartItemDto {
 
   @IsPositive()
   quantity: number;
+  @IsNumber()
+  adjusted_price: number;
+  @IsString()
+  size: string;
 }
 export class UpdateCartItemDTO extends PartialType(CreateCartItemDto) {}

@@ -10,6 +10,7 @@ import {
 import { Carts } from './cart.entity';
 import { Product } from './Product.entity';
 import { User } from './user.entity';
+import { IsNumber, IsString } from 'class-validator';
 
 @Entity('cart_items')
 export class CartItems {
@@ -31,4 +32,8 @@ export class CartItems {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
+  @Column()
+  size: string;
+  @Column({ type: 'int' })
+  adjusted_price: number;
 }

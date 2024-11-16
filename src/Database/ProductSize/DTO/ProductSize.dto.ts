@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateProductSizeDTO {
   @IsNotEmpty()

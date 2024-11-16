@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CartItemService } from '../Service/CartItem.service';
 import { CreateCartItemDto, UpdateCartItemDTO } from '../DTO/CartItem.dto';
@@ -40,5 +41,16 @@ export class CartItemController {
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.cartItemService.remove(id);
+  }
+  // API để thêm sản phẩm vào giỏ hàng dựa trên cartId và productId
+  @Post('add') // Thêm /add để phân biệt với phương thức create()
+  async addProductToCart(
+    @Query('cart_id') cart_id: string,
+    @Query('product_id') product_id: string,
+    @Body() createCartItemDto: CreateCartItemDto,
+  ) {
+    createCartItemDto.cart_id = +cart_id;
+    createCartItemDto.product_id = +product_id;
+    return this.cartItemService.create(createCartItemDto);
   }
 }

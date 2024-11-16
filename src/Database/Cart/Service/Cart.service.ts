@@ -55,4 +55,18 @@ export class CartService {
     const cart = await this.findOne(id);
     await this.CartRepository.remove(cart);
   }
+  // API để lấy giỏ hàng theo userId
+  async findByUserId(user_id: number): Promise<Carts> {
+    const user = await this.UserRepository.findOne({
+      where: { id: user_id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return this.CartRepository.findOne({
+      where: { user },
+    });
+  }
 }

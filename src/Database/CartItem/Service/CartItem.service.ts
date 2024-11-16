@@ -19,6 +19,7 @@ export class CartItemService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
+  // Tạo mới một cartItem
   async create(createCartItemDto: CreateCartItemDto): Promise<CartItems> {
     const cart = await this.cartRepository.findOne({
       where: { id: createCartItemDto.cart_id },
@@ -38,15 +39,19 @@ export class CartItemService {
       cart,
       product,
       quantity: createCartItemDto.quantity,
+      size: createCartItemDto.size,
+      adjusted_price: createCartItemDto.adjusted_price,
     });
 
     return this.cartItemRepository.save(cartItem);
   }
 
+  // Lấy tất cả cartItems
   async findAll(): Promise<CartItems[]> {
     return this.cartItemRepository.find({ relations: ['cart', 'product'] });
   }
 
+  // Lấy một cartItem theo ID
   async findOne(id: number): Promise<CartItems> {
     const cartItem = await this.cartItemRepository.findOne({
       where: { id },
@@ -58,6 +63,7 @@ export class CartItemService {
     return cartItem;
   }
 
+  // Cập nhật cartItem
   async update(
     id: number,
     updateCartItemDto: UpdateCartItemDTO,
@@ -69,6 +75,7 @@ export class CartItemService {
     return this.cartItemRepository.save(cartItem);
   }
 
+  // Xóa cartItem
   async remove(id: number): Promise<void> {
     const cartItem = await this.findOne(id);
     await this.cartItemRepository.remove(cartItem);

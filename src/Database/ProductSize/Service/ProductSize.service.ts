@@ -24,9 +24,19 @@ export class ProductSizeService {
     createProductSizeDto: CreateProductSizeDTO,
   ): Promise<ProductSize> {
     const productSize = new ProductSize();
-    productSize.products = { id: createProductSizeDto.product_id } as Product; // Chỉ cần gán đối tượng Product
+    productSize.products = { id: createProductSizeDto.product_id } as Product;
     productSize.size = createProductSizeDto.size;
-    productSize.price_adjustment = createProductSizeDto.price_adjustment;
+
+    // Kiểm tra kiểu dữ liệu và làm tròn price_adjustment
+    const priceAdjustment = +createProductSizeDto.price_adjustment;
+    if (isNaN(priceAdjustment)) {
+      throw new HttpException(
+        'Invalid price adjustment value',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    productSize.price_adjustment = Math.floor(priceAdjustment);
+
     return await this.productSizeRepository.save(productSize);
   }
 
@@ -49,13 +59,31 @@ export class ProductSizeService {
     updateProductSizeDto: UpdateProductSizeDTO,
   ): Promise<ProductSize> {
     const productSize = await this.findOne(id);
+
+    // Kiểm tra price_adjustment và làm tròn nếu cần
+    if (updateProductSizeDto.price_adjustment !== undefined) {
+      const priceAdjustment = +updateProductSizeDto.price_adjustment;
+      if (isNaN(priceAdjustment)) {
+        throw new HttpException(
+          'Invalid price adjustment value',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      console.log('Before floor:', priceAdjustment); // In giá trị trước khi làm tròn
+      updateProductSizeDto.price_adjustment = Math.floor(priceAdjustment);
+      console.log('After floor:', updateProductSizeDto.price_adjustment); // In giá trị sau khi làm tròn
+    }
+
+    // Cập nhật đối tượng productSize với dữ liệu mới
     Object.assign(productSize, updateProductSizeDto);
+
+    // Lưu cập nhật vào cơ sở dữ liệu
     return this.productSizeRepository.save(productSize);
   }
 
   async remove(id: number): Promise<ProductSize> {
     const productSize = await this.findOne(id);
     await this.productSizeRepository.remove(productSize);
-    return productSize; // hoặc có thể trả về một thông điệp xác nhận
+    return productSize; // Trả về product size đã bị xóa
   }
 }
