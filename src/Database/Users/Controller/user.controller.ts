@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   Session,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { userService } from '../Service/user.service';
 import { createUserDTO } from '../DTO/createdUser.dto';
@@ -73,5 +74,12 @@ export class userControllers {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+  @Get(':id/avatar')
+  async getUserAvatar(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ avatar_url: string }> {
+    const avatar_url = await this.userService.getAvatar(id);
+    return { avatar_url };
   }
 }

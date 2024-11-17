@@ -13,10 +13,15 @@ import { Orders } from 'src/Entities/Orders.entity';
 import { Carts } from 'src/Entities/cart.entity';
 import { OrderItems } from 'src/Entities/orderItems.entity';
 import { AuthModule } from './Auth.Module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 // Nhập AuthModule
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'), // Đường dẫn tới thư mục chứa file tĩnh
+    }),
     TypeOrmModule.forFeature([
       User,
       passwordResetTokens,

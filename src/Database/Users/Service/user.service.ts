@@ -60,4 +60,11 @@ export class userService {
     // Sau đó, xóa người dùng
     await this.userRepository.remove(user);
   }
+  async getAvatar(userId: number): Promise<string> {
+    const user = await this.findOne(userId);
+    if (!user.avatar_url) {
+      throw new NotFoundException('Người dùng chưa có ảnh đại diện.');
+    }
+    return user.avatar_url;
+  }
 }
