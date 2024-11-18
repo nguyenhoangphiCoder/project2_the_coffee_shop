@@ -21,39 +21,35 @@ export class PaymentMethodController {
     private readonly paymentMethodService: PaymentMethodService,
     private readonly userService: userService,
   ) {}
+
+  // Tạo mới một payment method
   @Post()
   async create(@Body() createPaymentMethodDto: CreatePaymentMethodDTO) {
-    // Tạo một đối tượng PaymentMethod từ DTO
     const paymentMethod = new PaymentMethod();
 
-    // Gán các thuộc tính từ DTO
     paymentMethod.method_type = createPaymentMethodDto.method_type;
     paymentMethod.provider_name = createPaymentMethodDto.provider_name;
-
-    // Các thuộc tính khác có thể gán giá trị mặc định hoặc tự động
-    paymentMethod.created_at = new Date(); // Gán thời gian hiện tại
+    paymentMethod.created_at = new Date(); // Gán thời gian tạo
     paymentMethod.user = await this.userService.findById(
       createPaymentMethodDto.user_id,
-    ); // Lấy user từ userService
-    paymentMethod.Orders = []; // Nếu có Orders thì bạn có thể gán sau hoặc để trống
+    ); // Lấy thông tin user
+    paymentMethod.Orders = []; // Khởi tạo Orders (nếu có)
 
-    // Sau đó, lưu đối tượng PaymentMethod vào database
+    // Lưu và trả về payment method vừa tạo
     return this.paymentMethodService.create(paymentMethod);
   }
 
+  // Lấy một payment method theo ID
   @Get(':payment_method_id')
   async findOne(
     @Param('payment_method_id') payment_method_id: number,
   ): Promise<PaymentMethod> {
-    return await this.paymentMethodService.findById(payment_method_id);
-  }
-  @Get(':payment_method_id')
-  findById(@Param('payment_method_id') payment_method_id: number) {
     return this.paymentMethodService.findById(payment_method_id);
   }
 
+  // Cập nhật thông tin payment method theo ID
   @Patch(':payment_method_id')
-  update(
+  async update(
     @Param('payment_method_id') payment_method_id: number,
     @Body() updatePaymentMethodDto: UpdatePaymentMethodDTO,
   ) {
@@ -63,13 +59,15 @@ export class PaymentMethodController {
     );
   }
 
+  // Xóa payment method theo ID
   @Delete(':payment_method_id')
-  delete(@Param('payment_method_id') payment_method_id: number) {
+  async delete(@Param('payment_method_id') payment_method_id: number) {
     return this.paymentMethodService.delete(payment_method_id);
   }
 
+  // Lấy tất cả payment methods
   @Get()
-  findAll() {
+  async findAll() {
     return this.paymentMethodService.findAll();
   }
 }
