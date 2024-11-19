@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -36,5 +38,23 @@ export class OrderItemController {
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this.orderItemService.remove(+id);
+  }
+  @Delete()
+  async removeAll(): Promise<void> {
+    return this.orderItemService.removeAll(); // Gọi phương thức xóa tất cả từ service
+  }
+  // Tìm OrderItems theo order_id
+  @Get('order/:order_id')
+  async findByOrderId(@Param('order_id') order_id: number) {
+    const orderItems = await this.orderItemService.findByOrderId(order_id);
+
+    if (!orderItems || orderItems.length === 0) {
+      return {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'No order items found for this order',
+      };
+    }
+
+    return orderItems; // Trả về danh sách OrderItems nếu tìm thấy
   }
 }

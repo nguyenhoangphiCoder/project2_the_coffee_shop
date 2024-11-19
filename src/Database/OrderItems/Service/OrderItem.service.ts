@@ -71,4 +71,37 @@ export class OrderItemService {
   async remove(id: number): Promise<void> {
     await this.OrderItemRepository.delete(id);
   }
+  async removeAll(): Promise<void> {
+    // Lấy tất cả ID từ bảng order_items
+    const allItems = await this.OrderItemRepository.find();
+
+    // Kiểm tra xem có item nào để xóa không
+    if (allItems.length === 0) {
+      throw new NotFoundException('No items found to delete');
+    }
+
+    // Tạo mảng các ID của item
+    const itemIds = allItems.map((item) => item.id);
+
+    // Xóa các item với ID hợp lệ
+    const result = await this.OrderItemRepository.delete(itemIds);
+
+    if (result.affected === 0) {
+      throw new NotFoundException('No items found to delete');
+    }
+  }
+  async findByOrderId(order_id: number): Promise<OrderItems[]> {
+    // Tìm đơn hàng dựa trên order_id
+    const order = await this.orderRepository.findOne({
+      where: { id: order_id },
+      relations: ['orderItems'], // Thêm quan hệ với orderItems nếu cần thiết
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    // Trả về các orderItems của đơn hàng này
+    return order.orderItems; // Dự kiến rằng bạn đã thiết lập quan hệ giữa Orders và OrderItems trong entity
+  }
 }

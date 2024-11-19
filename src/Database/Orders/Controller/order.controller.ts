@@ -61,4 +61,12 @@ export class OrderController {
       franchise_id,
     );
   }
+  @Delete()
+  async removeAll(): Promise<void> {
+    return this.orderService.removeAll(); // Gọi phương thức xóa tất cả từ service
+  }
+  @Get('user/:user_id/orders')
+  async findOrdersByUserId(@Param('user_id') user_id: number) {
+    return this.orderService.findOrdersByUserId(user_id);
+  }
 }

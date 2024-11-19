@@ -26,8 +26,8 @@ export class OrderItems {
   })
   @JoinColumn({ name: 'product_id' })
   product: Product;
-  @Column({ type: 'enum', enum: ['S', 'M', 'L'] })
-  size: 'S' | 'M' | 'L';
+  @Column({ type: 'enum', enum: ['M', 'L', 'XL'] })
+  size: 'M' | 'L' | 'XL';
   @Column({ type: 'int' })
   quantity: number;
   @Column({ type: 'decimal', precision: 10, scale: 2 })

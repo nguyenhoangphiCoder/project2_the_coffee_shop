@@ -140,4 +140,37 @@ export class OrderService {
 
     return order;
   }
+  async removeAll(): Promise<void> {
+    // Lấy tất cả ID từ bảng order_items
+    const allItems = await this.orderRepository.find();
+
+    // Kiểm tra xem có item nào để xóa không
+    if (allItems.length === 0) {
+      throw new NotFoundException('No items found to delete');
+    }
+
+    // Tạo mảng các ID của item
+    const itemIds = allItems.map((item) => item.id);
+
+    // Xóa các item với ID hợp lệ
+    const result = await this.orderRepository.delete(itemIds);
+
+    if (result.affected === 0) {
+      throw new NotFoundException('No items found to delete');
+    }
+  }
+  async findOrdersByUserId(user_id: number): Promise<Orders[]> {
+    const orders = await this.orderRepository.find({
+      where: { user: { id: user_id } },
+      relations: ['user', 'payment_method'],
+    });
+
+    if (!orders || orders.length === 0) {
+      throw new NotFoundException(
+        'Không tìm thấy đơn hàng cho người dùng này.',
+      );
+    }
+
+    return orders;
+  }
 }

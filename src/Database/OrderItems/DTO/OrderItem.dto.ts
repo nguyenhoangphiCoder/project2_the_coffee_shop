@@ -9,8 +9,8 @@ export class CreateOrderItemDTO {
   product_id: number;
 
   @IsNotEmpty()
-  @IsEnum(['S', 'M', 'L'])
-  size: 'S' | 'M' | 'L';
+  @IsEnum(['M', 'L', 'XL'])
+  size: 'M' | 'L' | 'XL';
 
   @IsNotEmpty()
   @IsNumber()
