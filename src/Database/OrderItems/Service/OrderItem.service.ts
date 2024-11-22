@@ -1,17 +1,16 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateOrderDTO } from 'src/Database/Orders/DTO/Order.dto';
-import { OrderItems } from 'src/Entities/orderItems.entity';
 import { Repository } from 'typeorm';
-import { CreateOrderItemDTO, UpdateOrderItemsDTO } from '../DTO/OrderItem.dto';
+import { OrderItems } from 'src/Entities/orderItems.entity';
 import { Orders } from 'src/Entities/Orders.entity';
 import { Product } from 'src/Entities/Product.entity';
+import { CreateOrderItemDTO, UpdateOrderItemsDTO } from '../DTO/OrderItem.dto';
 
 @Injectable()
 export class OrderItemService {
   constructor(
     @InjectRepository(OrderItems)
-    private readonly OrderItemRepository: Repository<OrderItems>,
+    private readonly orderItemRepository: Repository<OrderItems>,
 
     @InjectRepository(Orders)
     private readonly orderRepository: Repository<Orders>,
@@ -19,89 +18,100 @@ export class OrderItemService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
-  //tao don hang moi
+
+  // Tạo Order Item mới
   async create(createOrderItemDTO: CreateOrderItemDTO): Promise<OrderItems> {
-    // Tìm Order và Product dựa trên ID
     const order = await this.orderRepository.findOne({
       where: { id: createOrderItemDTO.order_id },
     });
+
     const product = await this.productRepository.findOne({
       where: { id: createOrderItemDTO.product_id },
     });
 
-    // Kiểm tra tồn tại
     if (!order || !product) {
       throw new NotFoundException('Order or Product not found');
     }
 
-    // Tạo đối tượng OrderItem từ DTO
-    const orderItem = this.OrderItemRepository.create({
+    const orderItem = this.orderItemRepository.create({
       ...createOrderItemDTO,
-      order: order,
-      product: product,
+      order,
+      product,
     });
 
-    return this.OrderItemRepository.save(orderItem);
+    return this.orderItemRepository.save(orderItem);
   }
-  //lay tat ca don hang
+
+  // Lấy tất cả Order Items
   async findAll(): Promise<OrderItems[]> {
-    return this.OrderItemRepository.find();
+    return this.orderItemRepository.find({
+      relations: ['product'], // Bao gồm thông tin sản phẩm
+    });
   }
-  //tim don hang theo id
+
+  // Lấy một Order Item theo ID
   async findOne(id: number): Promise<OrderItems> {
-    return this.OrderItemRepository.findOneBy({ id });
-  }
-  //cap nhat don hang
-  async update(
-    id: number,
-    UpdateOrderItemsDTO: UpdateOrderItemsDTO,
-  ): Promise<OrderItems> {
-    const orderItem = await this.OrderItemRepository.findOneBy({ id });
+    const orderItem = await this.orderItemRepository.findOne({
+      where: { id },
+      relations: ['product'], // Bao gồm thông tin sản phẩm
+    });
 
     if (!orderItem) {
       throw new NotFoundException('OrderItem not found');
     }
 
-    // Cập nhật các thuộc tính từ DTO, nhưng không bao gồm order_id
-    Object.assign(orderItem, UpdateOrderItemsDTO);
-
-    return this.OrderItemRepository.save(orderItem);
+    return orderItem;
   }
-  //xoa don hang theo id
+
+  // Lấy Order Items theo Order ID
+  async findByOrderId(order_id: number): Promise<OrderItems[]> {
+    const orderItems = await this.orderItemRepository.find({
+      where: { order: { id: order_id } },
+      relations: ['products'], // Bao gồm thông tin sản phẩm
+    });
+
+    if (!orderItems.length) {
+      throw new NotFoundException('No items found for the specified order');
+    }
+
+    return orderItems;
+  }
+
+  // Cập nhật Order Item
+  async update(
+    id: number,
+    updateOrderItemsDTO: UpdateOrderItemsDTO,
+  ): Promise<OrderItems> {
+    const orderItem = await this.orderItemRepository.findOne({
+      where: { id },
+    });
+
+    if (!orderItem) {
+      throw new NotFoundException('OrderItem not found');
+    }
+
+    Object.assign(orderItem, updateOrderItemsDTO);
+
+    return this.orderItemRepository.save(orderItem);
+  }
+
+  // Xóa Order Item theo ID
   async remove(id: number): Promise<void> {
-    await this.OrderItemRepository.delete(id);
-  }
-  async removeAll(): Promise<void> {
-    // Lấy tất cả ID từ bảng order_items
-    const allItems = await this.OrderItemRepository.find();
+    const result = await this.orderItemRepository.delete(id);
 
-    // Kiểm tra xem có item nào để xóa không
+    if (result.affected === 0) {
+      throw new NotFoundException('OrderItem not found');
+    }
+  }
+
+  // Xóa tất cả Order Items
+  async removeAll(): Promise<void> {
+    const allItems = await this.orderItemRepository.find();
+
     if (allItems.length === 0) {
       throw new NotFoundException('No items found to delete');
     }
 
-    // Tạo mảng các ID của item
-    const itemIds = allItems.map((item) => item.id);
-
-    // Xóa các item với ID hợp lệ
-    const result = await this.OrderItemRepository.delete(itemIds);
-
-    if (result.affected === 0) {
-      throw new NotFoundException('No items found to delete');
-    }
-  }
-  async findByOrderId(order_id: number): Promise<OrderItems[]> {
-    // Tìm đơn hàng dựa trên order_id
-    const order = await this.orderRepository.findOne({
-      where: { id: order_id },
-      relations: ['orderItems'], // Thêm quan hệ với orderItems nếu cần thiết
-    });
-
-    if (!order) {
-      throw new NotFoundException('Order not found');
-    }
-
-    // Trả về các orderItems của đơn hàng này
-    return order.orderItems; // Dự kiến rằng bạn đã thiết lập quan hệ giữa Orders và OrderItems trong entity
+    await this.orderItemRepository.delete(allItems.map((item) => item.id));
   }
 }

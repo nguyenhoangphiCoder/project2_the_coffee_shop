@@ -61,7 +61,13 @@ export class OrderService {
   // Liệt kê tất cả đơn hàng
   async findAll(): Promise<Orders[]> {
     return this.orderRepository.find({
-      relations: ['user', 'payment_method', 'managed_by', 'franchise'],
+      relations: [
+        'user',
+        'payment_method',
+        'managed_by',
+        'franchise',
+        'orderItems',
+      ],
     });
   }
 
