@@ -67,7 +67,7 @@ export class OrderItemService {
   async findByOrderId(order_id: number): Promise<OrderItems[]> {
     const orderItems = await this.orderItemRepository.find({
       where: { order: { id: order_id } },
-      relations: ['products'], // Bao gồm thông tin sản phẩm
+      relations: ['product'], // Bao gồm thông tin sản phẩm
     });
 
     if (!orderItems.length) {

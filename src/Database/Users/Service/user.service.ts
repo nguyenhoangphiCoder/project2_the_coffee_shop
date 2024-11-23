@@ -15,42 +15,46 @@ export class userService {
     @InjectRepository(Franchises)
     private FranchiseRepository: Repository<Franchises>,
   ) {}
-  // tao 1 nguoi dung moi
 
+  // Tạo 1 người dùng mới
   async create(createUserDTO: createUserDTO): Promise<User> {
     const user = this.userRepository.create(createUserDTO);
-    return this.userRepository.save(user); // luu user moi vao csdl
+    return this.userRepository.save(user); // Lưu user mới vào cơ sở dữ liệu
   }
 
-  // lay tat ca nguoi dung
-
+  // Lấy tất cả người dùng
   async findAll(): Promise<User[]> {
-    return this.userRepository.find(); // tra ve danh sach nguoi dung
+    return this.userRepository.find(); // Trả về danh sách người dùng
   }
 
-  //tim 1 nguoi theo ID
-
+  // Tìm 1 người theo ID
   async findOne(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } }); // tim nguoi theo id
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException(`Id${id} nguoi dung khong tim thay`);
+      throw new NotFoundException(`Id ${id} người dùng không tìm thấy`);
     }
     return user;
   }
-  async findById(user_id: number): Promise<User> {
-    return this.userRepository.findOne({
-      where: { id: user_id },
-    });
-  }
-  // cap nhat nguoi dung
 
+  // Tìm người dùng theo email
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(
+        `Người dùng với email ${email} không tìm thấy`,
+      );
+    }
+    return user;
+  }
+
+  // Cập nhật người dùng
   async update(id: number, updateUserDTO: updateUserDTO): Promise<User> {
     const user = await this.findOne(id);
-    Object.assign(user, updateUserDTO); // cap nhat cac thuoc tinh tu DTO vao user da tim thay
-    return this.userRepository.save(user); // luu thay doi vao csdl
+    Object.assign(user, updateUserDTO); // Cập nhật các thuộc tính từ DTO vào user đã tìm thấy
+    return this.userRepository.save(user); // Lưu thay đổi vào cơ sở dữ liệu
   }
 
-  //xoa nguoi dung
+  // Xóa người dùng
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
 
@@ -60,6 +64,8 @@ export class userService {
     // Sau đó, xóa người dùng
     await this.userRepository.remove(user);
   }
+
+  // Lấy avatar của người dùng
   async getAvatar(userId: number): Promise<string> {
     const user = await this.findOne(userId);
     if (!user.avatar_url) {

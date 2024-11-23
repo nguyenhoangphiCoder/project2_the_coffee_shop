@@ -4,7 +4,7 @@ import { User } from 'src/Entities/user.entity';
 import { Repository } from 'typeorm';
 import { createUserDTO } from '../DTO/createdUser.dto';
 import { plainToInstance } from 'class-transformer';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
@@ -20,9 +20,12 @@ export class AuthService {
     if (isExist) {
       throw new BadRequestException('User already exists');
     } else {
+      const salt = await bcrypt.genSalt();
+      const password = await bcrypt.hash(createUserDTO.password, salt);
+
       const newUser = await this.userRepository.save({
         ...createUserDTO,
-        password: createUserDTO.password, // Không mã hóa mật khẩu
+        password,
       });
       return plainToInstance(User, newUser);
     }
@@ -41,11 +44,12 @@ export class AuthService {
     }
 
     const storedPassword = user.password;
-    if (password === storedPassword) {
-      const { password, ...userInfo } = user; // Tách mật khẩu ra
-      return { ...userInfo, addresses: user.addresses }; // Trả về thông tin người dùng cùng với địa chỉ
+    const isMatch = await bcrypt.compare(password, storedPassword);
+
+    if (isMatch) {
+      return user;
     } else {
-      throw new BadRequestException('Invalid password');
+      throw new BadRequestException('Invalid email or password');
     }
   }
 }

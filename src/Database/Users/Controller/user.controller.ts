@@ -14,6 +14,7 @@ import { createUserDTO } from '../DTO/createdUser.dto';
 import { updateUserDTO } from '../DTO/updateUser.dto';
 import { AuthService } from '../Service/Auth.service';
 import { SignInDTO } from '../DTO/signIn.Dto';
+import { User } from 'src/Entities/user.entity';
 
 @Controller('users')
 export class userControllers {
@@ -81,5 +82,9 @@ export class userControllers {
   ): Promise<{ avatar_url: string }> {
     const avatar_url = await this.userService.getAvatar(id);
     return { avatar_url };
+  }
+  @Get('email/:email')
+  async getUserByEmail(@Param('email') email: string): Promise<User> {
+    return this.userService.findByEmail(email); // Gọi phương thức findByEmail
   }
 }

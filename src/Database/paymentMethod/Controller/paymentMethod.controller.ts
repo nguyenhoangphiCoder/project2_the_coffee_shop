@@ -30,7 +30,7 @@ export class PaymentMethodController {
     paymentMethod.method_type = createPaymentMethodDto.method_type;
     paymentMethod.provider_name = createPaymentMethodDto.provider_name;
     paymentMethod.created_at = new Date(); // Gán thời gian tạo
-    paymentMethod.user = await this.userService.findById(
+    paymentMethod.user = await this.userService.findOne(
       createPaymentMethodDto.user_id,
     ); // Lấy thông tin user
     paymentMethod.Orders = []; // Khởi tạo Orders (nếu có)

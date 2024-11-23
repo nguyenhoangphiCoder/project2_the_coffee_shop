@@ -13,3 +13,7 @@ export class CreatePassWordResetTokensDTO {
   @Type(() => Date) // Chuyển đổi chuỗi ngày tháng thành Date
   expired_at: Date;
 }
+export class ResetPasswordDTO {
+  token: string; // Mã token đặt lại mật khẩu
+  new_password: string; // Mật khẩu mới
+}
