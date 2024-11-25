@@ -17,3 +17,6 @@ export class ResetPasswordDTO {
   token: string; // Mã token đặt lại mật khẩu
   new_password: string; // Mật khẩu mới
 }
+export class SendResetTokenDTO {
+  email: string;
+}

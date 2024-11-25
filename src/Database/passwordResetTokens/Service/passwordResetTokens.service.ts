@@ -2,10 +2,11 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { passwordResetTokens } from 'src/Entities/passwordResetTokens.entity';
 import { Repository } from 'typeorm';
-import { CreatePassWordResetTokensDTO } from '../DTO/createPasswordResetTokens.dto';
 import { User } from 'src/Entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import * as dayjs from 'dayjs';
+import * as crypto from 'crypto';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class passwordResetTokenService {
@@ -16,29 +17,76 @@ export class passwordResetTokenService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  // Tạo token đặt lại mật khẩu
-  async create(
-    createPassWordResetTokensDTO: CreatePassWordResetTokensDTO,
-  ): Promise<passwordResetTokens> {
+  // Tạo token đặt lại mật khẩu và gửi email
+  async createAndSendToken(userEmail: string): Promise<string> {
     try {
-      // Tìm kiếm người dùng theo user_id
+      // Tìm kiếm người dùng theo email
       const user = await this.userRepository.findOne({
-        where: { id: createPassWordResetTokensDTO.user_id },
+        where: { email: userEmail },
       });
+
       if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('Email không tồn tại', HttpStatus.NOT_FOUND);
       }
 
+      // Tạo token
+      const token = crypto.randomBytes(3).toString('hex');
+      const expiredAt = dayjs().add(1, 'hour').toDate();
+
+      // Lưu token vào cơ sở dữ liệu
       const passwordResetToken = this.passwordResetTokenRepository.create({
         user,
-        token: createPassWordResetTokensDTO.token,
-        expired_at: createPassWordResetTokensDTO.expired_at,
+        token,
+        expired_at: expiredAt,
       });
+      await this.passwordResetTokenRepository.save(passwordResetToken);
 
-      return await this.passwordResetTokenRepository.save(passwordResetToken);
+      // Gửi email
+      await this.sendResetEmail(user.email, token);
+
+      return 'Token đặt lại mật khẩu đã được gửi tới email của bạn.';
     } catch (error) {
+      console.error(
+        'Error occurred while sending reset password request:',
+        error,
+      );
       throw new HttpException(
-        'Unable to create password reset token: ' + error.message,
+        'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu. Chi tiết: ' +
+          error.message,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  // Gửi email đặt lại mật khẩu
+  private async sendResetEmail(email: string, token: string): Promise<void> {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'nguyenhoangphifpt523@gmail.com',
+        pass: 'uwgk izeo shuw siru',
+      },
+    });
+
+    const mailOptions = {
+      from: '"The Tech Coffee" <your-email@gmail.com>',
+      to: email,
+      subject: 'Đặt lại mật khẩu',
+      text: `Vui lòng sử dụng mã sau để đặt lại mật khẩu: ${token}`,
+      html: `<p>Vui lòng sử dụng mã token sau để đặt lại mật khẩu:</p>
+             <p><strong>${token}</strong></p>`,
+    };
+
+    try {
+      console.log('Sending email to:', email);
+      await transporter.sendMail(mailOptions);
+      console.log('Email sent successfully');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw new HttpException(
+        'Không thể gửi email đặt lại mật khẩu. Chi tiết lỗi: ' + error.message,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
