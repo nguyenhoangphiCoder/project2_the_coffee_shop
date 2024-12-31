@@ -111,12 +111,6 @@ export class OrderService {
       throw new BadRequestException('Giỏ hàng trống, không thể tạo đơn hàng.');
     }
 
-    // Tính tổng giá trị đơn hàng
-    const totalAmount = cartItems.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0,
-    );
-
     const user = await this.userRepository.findOne({ where: { id: user_id } });
     const paymentMethod = await this.paymentMethodRepository.findOne({
       where: { payment_method_id: payment_method_id },

@@ -22,7 +22,6 @@ export class ProductImageService {
   ): Promise<ProductImages> {
     const productImage = new ProductImages();
     productImage.image_url = createProductImageDto.image_url;
-    // Chuyển đổi product_id thành số
     const productId = Number(createProductImageDto.product_id);
     productImage.product = await this.productsRepository.findOneOrFail({
       where: { id: productId },
@@ -35,30 +34,47 @@ export class ProductImageService {
     return this.productImageRepository.find({ relations: ['product'] });
   }
 
-  async FindOne(id: number): Promise<ProductImages> {
+  async findOne(id: number): Promise<ProductImages> {
     const productImage = await this.productImageRepository.findOne({
       where: { id },
       relations: ['product'],
     });
     if (!productImage) {
-      throw new NotFoundException(`not found ${id}`);
+      throw new NotFoundException(`Product image not found with ID ${id}`);
     }
     return productImage;
   }
+
+  // Thêm phương thức tìm kiếm theo productId
+  async findByProductId(productId: number): Promise<ProductImages[]> {
+    const productImages = await this.productImageRepository.find({
+      where: { product: { id: productId } },
+      relations: ['product'],
+    });
+
+    if (!productImages || productImages.length === 0) {
+      throw new NotFoundException(
+        `No images found for product ID ${productId}`,
+      );
+    }
+
+    return productImages;
+  }
+
   async update(
     id: number,
     updateProductImageDTO: UpdateProductImageDTO,
   ): Promise<ProductImages> {
-    const productImage = await this.FindOne(id); // Tìm hình ảnh trước khi cập nhật
+    const productImage = await this.findOne(id);
     const updatedProductImage = Object.assign(
       productImage,
       updateProductImageDTO,
-    ); // Cập nhật thông tin hình ảnh
-    return this.productImageRepository.save(updatedProductImage); // Lưu thay đổi vào cơ sở dữ liệu
+    );
+    return this.productImageRepository.save(updatedProductImage);
   }
 
   async remove(id: number): Promise<void> {
-    const productImage = await this.FindOne(id); // Kiểm tra hình ảnh trước khi xóa
-    await this.productImageRepository.remove(productImage); // Xóa hình ảnh khỏi cơ sở dữ liệu
+    const productImage = await this.findOne(id);
+    await this.productImageRepository.remove(productImage);
   }
 }

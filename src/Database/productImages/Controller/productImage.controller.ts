@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -28,20 +29,27 @@ export class ProductImageController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productImageService.FindOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.productImageService.findOne(id);
+  }
+
+  @Get('product/:productId')
+  async getImagesByProductId(
+    @Param('productId', ParseIntPipe) productId: number,
+  ) {
+    return this.productImageService.findByProductId(productId);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() UpdateProductImageDTO: UpdateProductImageDTO,
   ) {
-    return this.productImageService.update(+id, UpdateProductImageDTO);
+    return this.productImageService.update(id, UpdateProductImageDTO);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productImageService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.productImageService.remove(id);
   }
 }
