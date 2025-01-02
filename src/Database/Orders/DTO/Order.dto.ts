@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsInt,
@@ -40,5 +41,13 @@ export class CreateOrderDTO {
   @IsOptional()
   @IsEnum(['pending', 'completed', 'cancelled'])
   status?: 'pending' | 'completed' | 'cancelled';
+
+  @IsOptional()
+  @IsBoolean()
+  invoice_sent?: boolean;
 }
 export class UpdateOrderDTO extends PartialType(CreateOrderDTO) {}
+export class SendInvoiceDTO {
+  @IsEmail()
+  email: string;
+}

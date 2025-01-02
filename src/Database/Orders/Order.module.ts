@@ -9,6 +9,7 @@ import { OrderService } from './Service/Order.service';
 import { OrderItems } from 'src/Entities/orderItems.entity';
 import { CartItemModule } from '../CartItem/CartItem.module';
 import { CartItems } from 'src/Entities/cartItems.entity';
+import { ProductSize } from 'src/Entities/productSize.entity';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CartItems } from 'src/Entities/cartItems.entity';
       Franchises,
       OrderItems,
       CartItems,
+      ProductSize,
     ]),
     CartItemModule,
   ],

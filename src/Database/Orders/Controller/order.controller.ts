@@ -1,14 +1,20 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
 import { OrderService } from '../Service/Order.service';
-import { CreateOrderDTO, UpdateOrderDTO } from '../DTO/Order.dto';
+import {
+  CreateOrderDTO,
+  SendInvoiceDTO,
+  UpdateOrderDTO,
+} from '../DTO/Order.dto';
 import { Orders } from 'src/Entities/Orders.entity';
 
 @Controller('orders')
@@ -68,5 +74,9 @@ export class OrderController {
   @Get('user/:user_id/orders')
   async findOrdersByUserId(@Param('user_id') user_id: number) {
     return this.orderService.findOrdersByUserId(user_id);
+  }
+  @Post('send-invoice')
+  async sendInvoiceToEmail(@Body('email') email: string): Promise<string> {
+    return this.orderService.sendInvoiceToEmail(email);
   }
 }

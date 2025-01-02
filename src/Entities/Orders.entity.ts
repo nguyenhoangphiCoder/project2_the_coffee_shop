@@ -55,4 +55,6 @@ export class Orders {
     onDelete: 'CASCADE',
   })
   orderItems: OrderItems[];
+  @Column({ type: 'boolean', default: false })
+  invoice_sent: boolean;
 }

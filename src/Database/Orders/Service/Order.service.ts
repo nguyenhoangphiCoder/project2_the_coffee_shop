@@ -5,13 +5,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Orders } from 'src/Entities/Orders.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateOrderDTO, UpdateOrderDTO } from '../DTO/Order.dto';
 import { User } from 'src/Entities/user.entity';
 import { PaymentMethod } from 'src/Entities/paymentMethod.entity';
 import { Franchises } from 'src/Entities/franchises.entity';
 import { CartItems } from 'src/Entities/cartItems.entity';
-
+import * as nodemailer from 'nodemailer';
+import { ProductSize } from 'src/Entities/productSize.entity';
 @Injectable()
 export class OrderService {
   constructor(
@@ -25,6 +26,8 @@ export class OrderService {
     private readonly franchiseRepository: Repository<Franchises>,
     @InjectRepository(CartItems)
     private readonly cartItemsRepository: Repository<CartItems>,
+    @InjectRepository(ProductSize)
+    private readonly productSizeRepository: Repository<ProductSize>,
   ) {}
 
   // Tạo đơn hàng mới
@@ -159,6 +162,7 @@ export class OrderService {
       throw new NotFoundException('No items found to delete');
     }
   }
+
   async findOrdersByUserId(user_id: number): Promise<Orders[]> {
     const orders = await this.orderRepository.find({
       where: { user: { id: user_id } },
@@ -172,5 +176,118 @@ export class OrderService {
     }
 
     return orders;
+  }
+
+  async sendInvoiceToEmail(userEmail: string): Promise<string> {
+    // Tìm người dùng dựa trên email
+    const user = await this.userRepository.findOne({
+      where: { email: userEmail },
+      relations: ['orders'],
+    });
+
+    if (!user) {
+      throw new NotFoundException('Không tìm thấy người dùng với email này.');
+    }
+
+    // Lấy danh sách hóa đơn của người dùng
+    const orders = await this.orderRepository.find({
+      where: { user: { id: user.id }, invoice_sent: false }, // Chỉ lấy các hóa đơn chưa gửi
+      relations: ['orderItems', 'orderItems.product'],
+    });
+
+    if (orders.length === 0) {
+      throw new NotFoundException(
+        'Người dùng này không có hóa đơn nào chưa được gửi.',
+      );
+    }
+
+    // Tạo nội dung hóa đơn
+    const invoiceContent = await Promise.all(
+      orders.map(async (order) => {
+        // Lấy chi tiết các sản phẩm với kích thước
+        const orderDetails = await Promise.all(
+          order.orderItems.map(async (item) => {
+            // Lấy giá điều chỉnh theo kích thước từ bảng `product_sizes`
+            const productSize = await this.productSizeRepository.findOne({
+              where: {
+                products: { id: item.product.id },
+                size: item.size,
+              },
+            });
+
+            // Kiểm tra xem giá điều chỉnh có hợp lệ không
+            const adjustedPrice = Math.round(item.price); // Đảm bảo không phải NaN
+
+            console.log(
+              `$adjustedPrice: ${adjustedPrice}, $item.quantity: ${item.quantity}`,
+            );
+
+            return `- ${item.product.name} (${item.size}) x${item.quantity}: ${adjustedPrice} $`;
+          }),
+        );
+
+        // Tính tổng tiền của đơn hàng
+        const totalAmount = order.orderItems.reduce((total, item) => {
+          const adjustedPrice = Math.round(item.price);
+          // Giá sản phẩm đã được điều chỉnh
+          const quantity = item.quantity; // Số lượng sản phẩm
+
+          console.log(
+            `Adjusted Price: ${adjustedPrice}, Quantity: ${quantity}`,
+          );
+          return total + adjustedPrice; // Nhân giá với số lượng
+        }, 0);
+
+        console.log('Total Amount:', totalAmount);
+
+        return `
+          Hóa đơn ID: ${order.id}
+          Ngày tạo: ${order.created_at}
+          Chi tiết sản phẩm:
+          ${orderDetails.join('\n')}
+          Tổng cộng: ${totalAmount} $
+        `;
+      }),
+    );
+
+    const emailContent = `
+      <h3>Hóa đơn của bạn</h3>
+      <p>Cảm ơn bạn đã mua hàng tại The Tech Coffee.</p>
+      <p>Dưới đây là thông tin hóa đơn của bạn:</p>
+      <pre>${invoiceContent.join('\n')}</pre>
+    `;
+
+    // Gửi email
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'nguyenhoangphifpt523@gmail.com',
+        pass: 'uwgk izeo shuw siru',
+      },
+    });
+
+    const mailOptions = {
+      from: '"The Tech Coffee" <your-email@gmail.com>',
+      to: userEmail, // Chỉ gửi email cho người dùng duy nhất
+      subject: 'Hóa đơn mua hàng từ The Tech Coffee',
+      html: emailContent,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+
+      // Cập nhật trạng thái gửi hóa đơn
+      await this.orderRepository.update(
+        { id: In(orders.map((order) => order.id)) }, // Cập nhật cho tất cả hóa đơn đã gửi
+        { invoice_sent: true },
+      );
+
+      return 'Hóa đơn đã được gửi đến email của bạn.';
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw new BadRequestException('Không thể gửi email hóa đơn.');
+    }
   }
 }
